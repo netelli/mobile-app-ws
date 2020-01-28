@@ -60,13 +60,23 @@ public class UserController {
         return new ResponseEntity<UserRest>(userRest, HttpStatus.OK);
     }
 
-    @PutMapping
-    public String updateUser() {
-        return "update user was called";
+    @PutMapping(path = "/{userId}", consumes = {
+            MediaType.APPLICATION_XML_VALUE,
+            MediaType.APPLICATION_JSON_VALUE},
+            produces = {
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_JSON_VALUE})
+    public UserRest updateUser(@PathVariable String userId, @RequestBody UserDetailsRequestModel userDetails) {
+        UserRest userRest = users.get(userId);
+        userRest.setFirstName(userDetails.getFirstName());
+        userRest.setLastName(userDetails.getLastName());
+        users.put(userId, userRest);
+        return userRest;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "delete user was called";
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity deleteUser(@PathVariable String id) {
+        users.remove(id);
+        return ResponseEntity.noContent().build();
     }
 }
