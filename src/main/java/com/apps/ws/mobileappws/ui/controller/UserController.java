@@ -1,5 +1,6 @@
 package com.apps.ws.mobileappws.ui.controller;
 
+import com.apps.ws.mobileappws.exceptions.UserServiceException;
 import com.apps.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.apps.ws.mobileappws.ui.model.response.UserRest;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,9 @@ public class UserController {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-        String firstName = null;
-        int strLength = firstName.length();
+        if (true) {
+            throw new UserServiceException("A UserServiceException is thrown");
+        }
 
         if (users.containsKey(userId)) {
             return new ResponseEntity<UserRest>(users.get(userId), HttpStatus.OK);
