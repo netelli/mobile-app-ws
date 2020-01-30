@@ -1,23 +1,26 @@
 package com.apps.ws.mobileappws.ui.controller;
 
 import com.apps.ws.mobileappws.exceptions.UserServiceException;
+import com.apps.ws.mobileappws.service.UserService;
 import com.apps.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.apps.ws.mobileappws.ui.model.response.UserRest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
 
     Map<String, UserRest> users;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping(path = "/{userId}",
             produces = {
@@ -50,17 +53,7 @@ public class UserController {
                     MediaType.APPLICATION_JSON_VALUE})
 
     public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
-        UserRest userRest = new UserRest();
-        userRest.setFirstName(userDetails.getFirstName());
-        userRest.setLastName(userDetails.getLastName());
-        userRest.setEmail(userDetails.getEmail());
-        String userId = UUID.randomUUID().toString();
-        userRest.setUserId(userId);
-
-        if (users == null) {
-            users = new HashMap<>();
-        }
-        users.put(userId, userRest);
+        UserRest userRest = userService.createUser(userDetails);
 
         return new ResponseEntity<UserRest>(userRest, HttpStatus.OK);
     }
